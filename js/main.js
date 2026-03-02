@@ -97,7 +97,7 @@
             e.preventDefault();
             var target = document.getElementById('partners');
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 // Optional: briefly highlight the selector box
                 setTimeout(function () {
                     selectBox.style.borderColor = 'var(--deep-red)';

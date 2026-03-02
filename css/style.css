@@ -1032,22 +1032,22 @@ img {
     }
 
     .hero__title {
-        font-size: 32px;
+        font-size: 36px;
         max-width: 92%;
         margin-left: auto;
         margin-right: auto;
     }
 
     .hero__subtitle {
-        font-size: 15px;
+        font-size: 16px;
         max-width: 90%;
         margin-left: auto;
         margin-right: auto;
     }
 
     .hero__cta {
-        padding: 14px 32px;
-        font-size: 14px;
+        padding: 16px 36px;
+        font-size: 15px;
     }
 
     /* --- Sections --- */
@@ -1168,29 +1168,34 @@ img {
 
     .hero .decor {
         display: block !important;
-        opacity: 0.75;
+        opacity: 1;
+        mix-blend-mode: normal !important;
     }
 
     .hero .decor-chip {
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
+        left: 8% !important;
     }
 
     .hero .decor-dice {
-        width: 65px;
-        height: 65px;
+        width: 85px;
+        height: 85px;
         top: 78% !important;
+        left: 12% !important;
     }
 
     .hero .decor-cards {
-        width: 70px;
-        height: 70px;
+        width: 90px;
+        height: 90px;
+        right: 6% !important;
     }
 
     .hero .decor-roulette {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         top: 75% !important;
+        right: 8% !important;
     }
 
     /* --- Scroll arrow indicator --- */
