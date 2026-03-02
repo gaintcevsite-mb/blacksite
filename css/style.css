@@ -512,15 +512,14 @@ img {
     top: calc(100% + 8px);
     left: 0;
     right: 0;
-    background: var(--white);
+    background: #ffffff;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    box-shadow: var(--card-shadow-hover);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
     max-height: 250px;
     overflow-y: auto;
     overscroll-behavior: contain;
-    /* Prevents background scrolling */
-    z-index: 999;
+    z-index: 9999;
     opacity: 0;
     pointer-events: none;
     transform: translateY(-10px);
@@ -1122,6 +1121,13 @@ img {
 
     .partner-box p {
         font-size: 13px;
+    }
+
+    .custom-select__options {
+        max-height: 250px;
+        background: #FFFFFF;
+        z-index: 9999;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     }
 
     /* --- Founder --- */
