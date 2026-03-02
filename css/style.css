@@ -1,5 +1,5 @@
 /* ===================================
-   Apex Ledger — Redesigned Styles
+   PayForge — Redesigned Styles
    Inspired by paykassma.com
    =================================== */
 
@@ -155,13 +155,18 @@ img {
 }
 
 .nav__logo {
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 800;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
 }
 
 .nav__logo span {
     color: var(--deep-red);
+    font-style: normal;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
 }
 
 .nav__links {
@@ -628,6 +633,11 @@ img {
     margin-bottom: 24px;
 }
 
+/* ---------- Scroll Arrow (mobile only, hidden on desktop) ---------- */
+.scroll-arrow {
+    display: none;
+}
+
 /* ---------- Floating Gaming Decor (Images) ---------- */
 .decor {
     position: absolute;
@@ -770,9 +780,11 @@ img {
 /* ---------- Quote / Founder ---------- */
 .founder-block {
     display: flex;
-    align-items: flex-start;
-    gap: 40px;
-    max-width: 800px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
@@ -1149,9 +1161,71 @@ img {
         padding: 24px;
     }
 
-    /* --- DECOR: hide all on mobile to prevent overlap --- */
+    /* --- DECOR: show small decor on mobile hero only --- */
     .decor {
         display: none !important;
+    }
+
+    .hero .decor {
+        display: block !important;
+        opacity: 0.75;
+    }
+
+    .hero .decor-chip {
+        width: 60px;
+        height: 60px;
+    }
+
+    .hero .decor-dice {
+        width: 65px;
+        height: 65px;
+        top: 78% !important;
+    }
+
+    .hero .decor-cards {
+        width: 70px;
+        height: 70px;
+    }
+
+    .hero .decor-roulette {
+        width: 80px;
+        height: 80px;
+        top: 75% !important;
+    }
+
+    /* --- Scroll arrow indicator --- */
+    .scroll-arrow {
+        display: block;
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 32px;
+        height: 32px;
+        z-index: 20;
+        animation: scrollBounce 2s ease-in-out infinite;
+    }
+
+    .scroll-arrow svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--graphite-muted);
+        stroke-width: 2;
+        fill: none;
+    }
+
+    @keyframes scrollBounce {
+
+        0%,
+        100% {
+            transform: translateX(-50%) translateY(0);
+            opacity: 0.6;
+        }
+
+        50% {
+            transform: translateX(-50%) translateY(10px);
+            opacity: 1;
+        }
     }
 }
 

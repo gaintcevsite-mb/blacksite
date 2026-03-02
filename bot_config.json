@@ -1,0 +1,85 @@
+{
+    "countries": {
+        "Pakistan 🇵🇰": [
+            {
+                "text": "Do you have a PVT LTD?",
+                "options": [
+                    "Yes, I have",
+                    "No, I haven't"
+                ]
+            },
+            {
+                "text": "Do you have an API wallet?",
+                "options": [
+                    "Yes, I have",
+                    "No, I haven't"
+                ]
+            },
+            {
+                "text": "Which bank's API wallet do you have?",
+                "options": [
+                    "JazzCash",
+                    "Easypaisa",
+                    "Meezan",
+                    "Alfalah"
+                ],
+                "condition": {
+                    "depends_on_index": 1,
+                    "expected_answer": "Yes, I have"
+                }
+            },
+            {
+                "text": "Have you had any experience working in this field?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "How many hours a day are you willing to devote to work?",
+                "options": [
+                    "1-2",
+                    "2-4",
+                    "4-6"
+                ]
+            }
+        ],
+        "Uruguay 🇺🇾": [
+            {
+                "text": "¿Tienes BROU?",
+                "options": [
+                    "Si",
+                    "No"
+                ]
+            },
+            {
+                "text": "¿Tienes experiencia en este campo?",
+                "options": [
+                    "Si",
+                    "No"
+                ]
+            },
+            {
+                "text": "Necesitaremos acceso a tu BROU para trabajar (nombre de usuario/contraseña). El pago es del 2,5 % del volumen total de tu cuenta, unos 100 dólares a la semana.\n¿Te parece bien?",
+                "options": [
+                    "Si",
+                    "No"
+                ]
+            }
+        ]
+    },
+    "users": [
+        {
+            "chat_id": 8515240910,
+            "username": "sudo_n"
+        },
+        {
+            "chat_id": 8253241623,
+            "username": "adam_guler"
+        },
+        {
+            "chat_id": 828144597,
+            "username": "scw3zy"
+        }
+    ]
+}

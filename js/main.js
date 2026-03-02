@@ -1,12 +1,12 @@
 /* ===================================
-   Apex Ledger — Main JS (Redesigned)
+   PayForge — Main JS (Redesigned)
    =================================== */
 
 (function () {
     'use strict';
 
     // ============ COUNTRY DATA ============
-    var TELEGRAM_BOT_URL = 'https://t.me/ApexLedgerBot';
+    var TELEGRAM_BOT_URL = 'https://t.me/PayForgeBot';
 
     var countries = [
         { name: 'Pakistan', flag: '🇵🇰', region: 'Asia' },
