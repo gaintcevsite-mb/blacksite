@@ -63,7 +63,8 @@
 
                 // Show and configure TG button
                 partnerBtn.style.display = 'inline-flex';
-                partnerBtn.href = TELEGRAM_BOT_URL + '?start=' + encodeURIComponent(c.name);
+                var safeName = c.name.replace(/\s+/g, '_');
+                partnerBtn.href = TELEGRAM_BOT_URL + '?start=join_' + encodeURIComponent(safeName);
             });
 
             optionsContainer.appendChild(opt);
@@ -179,5 +180,73 @@
             langMenu.classList.remove('lang-switch__menu--open');
         });
     }
+
+    // ============ GEO IP AUTO-SELECT & REDIRECT ============
+    // Only fetch if we don't have it saved, or perform actions if we do.
+    async function initGeoIp() {
+        let geoData = null;
+        const storedGeo = sessionStorage.getItem('geo_data');
+
+        if (storedGeo) {
+            try {
+                geoData = JSON.parse(storedGeo);
+            } catch (e) { }
+        }
+
+        if (!geoData) {
+            try {
+                const res = await fetch('https://get.geojs.io/v1/ip/geo.json');
+                if (res.ok) {
+                    geoData = await res.json();
+                    sessionStorage.setItem('geo_data', JSON.stringify(geoData));
+                }
+            } catch (error) {
+                console.error('GeoIP fetch error:', error);
+            }
+        }
+
+        if (geoData && geoData.country_code) {
+            const countryCode = geoData.country_code; // e.g. "ES", "AR", "PA"
+            const countryNameStr = geoData.country; // e.g. "Panama"
+
+            // 1. Language Auto-Redirect
+            // If user is from a Spanish-speaking country and on index.html, redirect once.
+            const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.indexOf('.html') === -1;
+            const redirected = sessionStorage.getItem('lang_redirected');
+
+            const latamESCodes = ['AR', 'BO', 'CL', 'CO', 'CR', 'CU', 'DO', 'EC', 'SV', 'GQ', 'GT', 'HN', 'MX', 'NI', 'PA', 'PY', 'PE', 'PR', 'ES', 'UY', 'VE'];
+
+            if (isIndex && !redirected && latamESCodes.includes(countryCode)) {
+                sessionStorage.setItem('lang_redirected', 'true');
+                window.location.href = 'es.html';
+                return; // Stop execution as we are leaving the page
+            } else if (!redirected) {
+                // Mark as checked to prevent future loops if they manually switch
+                sessionStorage.setItem('lang_redirected', 'true');
+            }
+
+            // 2. Auto-Select "Become a Partner" dropdown
+            if (selectBox && optionsContainer) {
+                // Find matching country in our array
+                const matchedCountry = countries.find(c => c.name.toLowerCase() === countryNameStr.toLowerCase());
+
+                if (matchedCountry) {
+                    // Update UI safely
+                    if (selectValue) {
+                        selectValue.innerHTML = '<span class="custom-select__option-flag" style="margin-right:8px;">' + matchedCountry.flag + '</span><span>' + matchedCountry.name + '</span>';
+                    }
+                    if (partnerBtn) {
+                        partnerBtn.style.display = 'inline-flex';
+                        var safeName = matchedCountry.name.replace(/\s+/g, '_');
+                        partnerBtn.href = TELEGRAM_BOT_URL + '?start=join_' + encodeURIComponent(safeName);
+                    }
+                    console.log('GeoIP Auto-selected:', matchedCountry.name);
+                }
+            }
+        }
+    }
+
+    // Run GeoIP logic
+    initGeoIp();
 
 })();

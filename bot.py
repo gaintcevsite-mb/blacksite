@@ -79,7 +79,7 @@ def global_text_router(message):
         matched_country = None
         if deep_link_country:
             available_countries = list(bot_config.get('countries', {}).keys())
-            search_str = deep_link_country.lower()
+            search_str = deep_link_country.replace('_', ' ').lower()
             for conf_c in available_countries:
                 if search_str in conf_c.lower():
                     matched_country = conf_c
