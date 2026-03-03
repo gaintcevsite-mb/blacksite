@@ -6,7 +6,7 @@
     'use strict';
 
     // ============ COUNTRY DATA ============
-    var TELEGRAM_BOT_URL = 'https://t.me/PayForgeBot';
+    var TELEGRAM_BOT_URL = 'https://t.me/PayForge_Bot';
 
     var countries = [
         { name: 'Pakistan', flag: '🇵🇰', region: 'Asia' },
@@ -166,5 +166,18 @@
             nav.classList.remove('nav--scrolled');
         }
     }, { passive: true });
+
+    // ============ LANGUAGE SWITCHER ============
+    var langBtn = document.getElementById('langBtn');
+    var langMenu = document.getElementById('langMenu');
+    if (langBtn && langMenu) {
+        langBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            langMenu.classList.toggle('lang-switch__menu--open');
+        });
+        document.addEventListener('click', function () {
+            langMenu.classList.remove('lang-switch__menu--open');
+        });
+    }
 
 })();

@@ -3,7 +3,7 @@
    Inspired by paykassma.com
    =================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500&family=Outfit:wght@800;900&display=swap');
 
 /* ---------- Reset ---------- */
 *,
@@ -152,39 +152,132 @@ img {
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    max-width: 1400px;
+    padding: 0 48px;
 }
 
 .nav__logo {
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    transition: opacity var(--transition);
 }
 
-.nav__logo span {
-    color: var(--deep-red);
-    font-style: normal;
-    font-family: 'Inter', sans-serif;
+.nav__logo:hover {
+    opacity: 0.85;
+}
+
+.nav__brand {
+    font-size: 32px;
     font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    color: var(--graphite);
+    letter-spacing: -0.04em;
+    line-height: 64px;
+    /* Match nav height for perfect vertical centering */
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.nav__brand-dot {
+    color: var(--deep-red);
 }
 
 .nav__links {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 36px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .nav__link {
-    font-size: 13px;
+    font-size: 14.5px;
     font-weight: 600;
-    color: var(--graphite-muted);
-    letter-spacing: 0.03em;
+    color: var(--graphite-light);
+    letter-spacing: 0.01em;
     transition: color var(--transition);
 }
 
 .nav__link:hover {
     color: var(--graphite);
+}
+
+.nav__right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* ---------- Language Switcher ---------- */
+.lang-switch {
+    position: relative;
+}
+
+.lang-switch__btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--graphite);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all var(--transition);
+    white-space: nowrap;
+}
+
+.lang-switch__btn:hover {
+    border-color: var(--deep-red);
+    color: var(--deep-red);
+}
+
+.lang-switch__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    min-width: 160px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: all 0.2s ease;
+}
+
+.lang-switch__menu--open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.lang-switch__option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--graphite);
+    text-decoration: none;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+.lang-switch__option:hover {
+    background: var(--bg-soft);
+}
+
+.lang-switch__option--active {
+    color: var(--deep-red);
+    font-weight: 700;
 }
 
 .nav__cta {
@@ -918,6 +1011,40 @@ img {
     content: '♣';
 }
 
+/* ---------- Legal Pages ---------- */
+.legal-page__updated {
+    font-size: 13px;
+    color: var(--graphite-muted);
+    margin-bottom: 40px;
+}
+
+.legal-page__content h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--graphite);
+    margin-top: 32px;
+    margin-bottom: 12px;
+}
+
+.legal-page__content p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--graphite-light);
+    margin-bottom: 16px;
+}
+
+.legal-page__content ul {
+    padding-left: 24px;
+    margin-bottom: 16px;
+}
+
+.legal-page__content li {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--graphite-light);
+    margin-bottom: 8px;
+}
+
 /* ---------- Footer ---------- */
 .footer {
     padding: 40px 0;
@@ -926,8 +1053,16 @@ img {
 
 .footer__inner {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.footer__top {
+    display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
 }
 
 .footer__copy {
@@ -940,6 +1075,40 @@ img {
     font-weight: 800;
     color: var(--border);
     letter-spacing: 0.2em;
+}
+
+.footer__legal {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer__legal-link {
+    font-size: 12px;
+    color: var(--graphite-muted);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.footer__legal-link:hover {
+    color: var(--graphite);
+    text-decoration: underline;
+}
+
+.footer__legal-sep {
+    color: var(--border);
+    font-size: 12px;
+    user-select: none;
+}
+
+.footer__registration {
+    font-size: 11px;
+    color: var(--graphite-muted);
+    text-align: center;
+    line-height: 1.6;
+    opacity: 0.7;
 }
 
 /* ---------- Scroll Reveal ---------- */
@@ -979,11 +1148,20 @@ img {
         border-bottom: none;
     }
 
+    .nav__inner {
+        padding: 0 16px;
+    }
+
     .nav.nav--scrolled {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--border);
+    }
+
+    .nav__brand {
+        font-size: 24px;
+        line-height: 64px;
     }
 
     .nav__links {
@@ -999,6 +1177,13 @@ img {
         border-bottom: 1px solid var(--border);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         z-index: 100;
+        transform: none;
+    }
+
+    .nav__link {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--graphite);
     }
 
     .nav__links--open {
@@ -1011,6 +1196,20 @@ img {
 
     .nav__cta {
         display: none;
+    }
+
+    .nav__right {
+        gap: 8px;
+    }
+
+    .lang-switch__btn {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    .lang-switch__menu {
+        right: 0;
+        min-width: 150px;
     }
 
     /* --- Hero: full screen, vertically centered --- */

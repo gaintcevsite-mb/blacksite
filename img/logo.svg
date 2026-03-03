@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700" />
+      <stop offset="50%" stop-color="#ffb300" />
+      <stop offset="100%" stop-color="#b27a00" />
+    </linearGradient>
+    <linearGradient id="red-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff3333" />
+      <stop offset="100%" stop-color="#cc0000" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Logo Mark (Anvil + Coin/Shield) -->
+  <g transform="translate(20, 20)">
+    <!-- Base Anvil -->
+    <path d="M 20 60 L 60 60 L 70 80 L 10 80 Z" fill="url(#red-grad)" />
+    <path d="M 30 30 L 50 30 L 50 60 L 30 60 Z" fill="url(#red-grad)" />
+    <!-- Top Platform -->
+    <path d="M 10 20 L 70 20 L 70 30 L 10 30 Z" fill="url(#red-grad)" />
+    
+    <!-- Gold Coin striking -->
+    <circle cx="40" cy="15" r="15" fill="url(#gold-grad)" filter="url(#glow)" />
+    <path d="M 35 10 L 45 10 L 40 20 Z" fill="#fff" opacity="0.8"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="110" y="75" font-family="'Inter', 'Roboto', sans-serif" font-weight="800" font-size="54" fill="#ffffff" letter-spacing="-1">
+    Pay<tspan fill="url(#red-grad)">Forge</tspan>
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="115" y="100" font-family="'Inter', 'Roboto', sans-serif" font-weight="500" font-size="14" fill="#aaaaaa" letter-spacing="4">
+    PROCESSING HUB
+  </text>
+</svg>

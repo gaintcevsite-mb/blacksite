@@ -4,7 +4,7 @@ import json
 import os
 import re
 
-TOKEN = '8617195820:AAHIqbHhfQpstsswgfrfK_lJTNCAt2F5C1g'
+TOKEN = '8464446592:AAHz5xhjTiiSWX1cPuVvU6yfUzOBPQLTdvw'
 ADMIN_ID = 8253241623
 CONFIG_FILE = 'bot_config.json'
 
@@ -91,13 +91,13 @@ def global_text_router(message):
         else:
             available_countries = list(bot_config.get('countries', {}).keys())
             if not available_countries:
-                bot.send_message(chat_id, "Welcome to Güler & Partners! Applications are currently closed.")
+                bot.send_message(chat_id, "Welcome to PayForge! Applications are currently closed.")
                 return
             
             user_data[chat_id]['state'] = 'awaiting_country'
             bot.send_message(
                 chat_id,
-                "Welcome to Güler & Partners!\n\nPlease select your country to apply:",
+                "Welcome to PayForge!\n\nPlease select your country to apply:",
                 reply_markup=create_reply_keyboard(available_countries)
             )
         return
@@ -255,7 +255,7 @@ def finish_application(chat_id):
             answers_text += f"🔹 <b>{q['text']}</b>\n{ans}\n\n"
             
     admin_text = (
-        f"🚨 <b>Новый Лид: {country}</b> 🚨\n"
+        f"🚨 <b>Новая заявка PayForge: {country}</b> 🚨\n"
         f"<i>(ID: {chat_id})</i>\n\n"
         f"👤 <b>Имя:</b> {name}\n"
         f"📱 <b>Telegram:</b> {username}\n\n"
@@ -592,5 +592,5 @@ def process_broadcast_msg(message):
     show_admin_menu(chat_id)
 
 if __name__ == '__main__':
-    print("Bot is running with Advanced Constructor...")
+    print("PayForge Bot is running...")
     bot.infinity_polling(skip_pending=True)

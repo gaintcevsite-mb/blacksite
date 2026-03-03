@@ -66,6 +66,184 @@
                     "No"
                 ]
             }
+        ],
+        "Egypt 🇪🇬": [
+            {
+                "text": "Do you have at least 3 Vodafone accounts, Paymob, and 1 mobile phone for work?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "We require a security deposit (prepay) for this region in the future to build trust. Are you ready to provide a security deposit when requested?",
+                "options": [
+                    "Yes, I am ready",
+                    "No"
+                ]
+            },
+            {
+                "text": "Salary is /week (if giving  prepay) or 2% of turnover without prepay (up to 3-4% with prepay depending on accounts). Do you agree to these terms?",
+                "options": [
+                    "Yes, I agree",
+                    "No"
+                ]
+            }
+        ],
+        "Nepal 🇳🇵": [
+            {
+                "text": "Do you have at least two accounts in Khalti or eSewa (e.g., 2 Khalti, 2 eSewa, or 1 of each)?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "Do you have a Fonepay account, or are you ready to open one?",
+                "options": [
+                    "Yes, I have it",
+                    "Ready to open",
+                    "No"
+                ]
+            },
+            {
+                "text": "To work with us long-term, we require a security deposit (prepay) of at least . Are you ready to provide this prepay in the future?",
+                "options": [
+                    "Yes, I am ready",
+                    "No"
+                ]
+            }
+        ],
+        "Mali 🇲🇱": [
+            {
+                "text": "Do you have Wave, Orange, or Moov accounts?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "Authorization is via phone number. Are you ready to provide OTP (or auth links) and PINs for the accounts?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "The payment is fixed at 30$ per week if accesses are provided. Do you agree to these terms?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            }
+        ],
+        "Bhutan 🇧🇹": [
+            {
+                "text": "Do you have a BNB account?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "We need account number and account name. Later we may require Login/Pass to check transactions. Are you okay with providing these?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "Salary is /week on Mondays, OR 5% of daily turnover if you work with a prepay (security deposit). Do you agree?",
+                "options": [
+                    "Yes, I agree",
+                    "No"
+                ]
+            }
+        ],
+        "Papua New Guinea 🇵🇬": [
+            {
+                "text": "Do you have a BSP account?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "We need account number and account name. Later we may require Login/Pass to check transactions. Are you okay with providing these?",
+                "options": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            {
+                "text": "Salary is /week on Mondays, OR 4% of daily turnover if you work with a prepay (security deposit). Do you agree?",
+                "options": [
+                    "Yes, I agree",
+                    "No"
+                ]
+            }
+        ],
+        "Jamaica 🇯🇲": [
+            {
+                "text": "Do you have BOTH Scotiabank and Lynk accounts available EXCLUSIVELY for our work (No personal use allowed)?",
+                "options": [
+                    "Yes, I have both",
+                    "No"
+                ]
+            },
+            {
+                "text": "Are you using an Android phone? (ZTE phones are NOT supported for Lynk).",
+                "options": [
+                    "Yes, Android (Not ZTE)",
+                    "No"
+                ]
+            },
+            {
+                "text": "You must be available daily for 15-30 mins to do p2p trades, transfers, and send screenshots. Ready?",
+                "options": [
+                    "Yes, ready",
+                    "No"
+                ]
+            },
+            {
+                "text": "Salary is /week initially, and can increase to /week for loyal partners. Do you agree?",
+                "options": [
+                    "Yes, I agree",
+                    "No"
+                ]
+            }
+        ],
+        "Costa Rica 🇨🇷": [
+            {
+                "text": "¿Tienes una cuenta personal en BAC Credomatic con SINPE conectado?",
+                "options": [
+                    "Sí",
+                    "No"
+                ]
+            },
+            {
+                "text": "La cuenta debe estar activa y sin saldo negativo. ¿Estás dispuesto a instalar una app de sms-forwarder para trabajar?",
+                "options": [
+                    "Sí",
+                    "No"
+                ]
+            },
+            {
+                "text": "El pago es fijo de 75 USDT semanales + bono de 15$ por realizar tareas. ¿Estás de acuerdo con estas condiciones?",
+                "options": [
+                    "Sí",
+                    "No"
+                ]
+            }
+        ],
+        "Panama ��🇦": [
+            {
+                "text": "¿Tienes una cuenta en YAPPE?",
+                "options": [
+                    "Sí",
+                    "No"
+                ]
+            }
         ]
     },
     "users": [

@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PayForge — Payment Infrastructure for iGaming Operators</title>
+  <title>iGaming Infrastructure by PayForge</title>
   <meta name="description"
     content="High-risk payment processing, acquiring, and fraud management built for online casinos, sports betting, and iGaming platforms. Partner with us in 30+ countries.">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
   <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -15,7 +16,9 @@
   <!-- ======================== NAV ======================== -->
   <nav class="nav" id="nav">
     <div class="container nav__inner">
-      <a href="#hero" class="nav__logo">Pay<span>Forge</span></a>
+      <a href="#hero" class="nav__logo">
+        <span class="nav__brand">payforge<span class="nav__brand-dot">.</span></span>
+      </a>
       <div class="nav__links" id="navLinks">
         <a href="#solutions" class="nav__link">Solutions</a>
         <a href="#flow" class="nav__link">Infrastructure</a>
@@ -23,9 +26,22 @@
         <a href="#founder" class="nav__link">About</a>
         <a href="#contact" class="nav__link">Contact</a>
       </div>
-      <a href="#partners" class="nav__cta">Become a Partner</a>
-      <div class="nav__toggle" id="navToggle" aria-label="Menu">
-        <span></span><span></span><span></span>
+      <div class="nav__right">
+        <div class="lang-switch" id="langSwitch">
+          <button class="lang-switch__btn" id="langBtn">🌐 EN</button>
+          <div class="lang-switch__menu" id="langMenu">
+            <a href="index.html" class="lang-switch__option lang-switch__option--active">🇬🇧 English</a>
+            <a href="ru.html" class="lang-switch__option">🇷🇺 Русский</a>
+            <a href="es.html" class="lang-switch__option">🇪🇸 Español</a>
+            <a href="bn.html" class="lang-switch__option">🇧🇩 বাংলা</a>
+            <a href="hi.html" class="lang-switch__option">🇮🇳 हिन्दी</a>
+            <a href="ur.html" class="lang-switch__option">🇵🇰 اردو</a>
+          </div>
+        </div>
+        <a href="#partners" class="nav__cta">Become a Partner</a>
+        <div class="nav__toggle" id="navToggle" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </div>
       </div>
     </div>
   </nav>
@@ -216,7 +232,7 @@
           </div>
         </div>
 
-        <a id="partnerBtn" href="https://t.me/PayForgeBot" target="_blank" class="btn btn--tg"
+        <a id="partnerBtn" href="https://t.me/PayForge_Bot" target="_blank" class="btn btn--tg"
           style="display: none; width: 100%; justify-content: center;">Apply via Telegram Bot</a>
       </div>
 
@@ -278,8 +294,18 @@
   <!-- ======================== FOOTER ======================== -->
   <footer class="footer">
     <div class="container footer__inner">
-      <div class="footer__copy">&copy; 2026 PayForge. All rights reserved.</div>
-      <div class="footer__mark">7 7 7</div>
+      <div class="footer__top">
+        <div class="footer__copy">&copy; 2026 PayForge. All rights reserved.</div>
+        <div class="footer__mark">7 7 7</div>
+      </div>
+      <div class="footer__legal">
+        <a href="privacy.html" class="footer__legal-link">Privacy Policy</a>
+        <span class="footer__legal-sep">·</span>
+        <a href="terms.html" class="footer__legal-link">Terms of Use</a>
+      </div>
+      <div class="footer__registration">
+        PayForge Ltd. is registered in Anjouan, Union of Comoros · License No. L/15892/DFI
+      </div>
     </div>
   </footer>
 
