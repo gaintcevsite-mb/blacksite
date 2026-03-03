@@ -1361,6 +1361,14 @@ img {
         gap: 12px;
     }
 
+    .footer__top {
+        justify-content: center;
+    }
+
+    .footer__mark {
+        display: none;
+    }
+
     /* --- Modal --- */
     .modal {
         padding: 24px;
