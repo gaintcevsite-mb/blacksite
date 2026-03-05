@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        img {
+            max-width: 150px;
+            border: 1px solid #ccc;
+            margin: 5px;
+            background: #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Extracted Cubes</h1>
+    <script>
+        for (let r = 0; r < 3; r++) {
+            document.write('<div><h3>Row ' + r + '</h3>');
+            for (let c = 0; c < 4; c++) {
+                document.write('<figure style="display:inline-block">');
+                document.write('<img src="extracted_cubes/cube_' + r + '_' + c + '.png">');
+                document.write('<figcaption>cube_' + r + '_' + c + '.png</figcaption>');
+                document.write('</figure>');
+            }
+            document.write('</div>');
+        }
+    </script>
+</body>
+
+</html>

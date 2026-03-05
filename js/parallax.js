@@ -1,0 +1,1 @@
+/* Removed excessive background decorations per user request */
