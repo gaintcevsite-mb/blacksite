@@ -1,0 +1,16 @@
+[Unit]
+Description=Gunicorn process to serve PayForge Platform
+After=network.target
+
+[Service]
+# Предполагается, что пользователь — gaintcev
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/payforge
+# Путь к venv (нужно создать при установке)
+Environment="PATH=/var/www/payforge/venv/bin"
+# Запуск Gunicorn через сокет для связи с Nginx
+ExecStart=/var/www/payforge/venv/bin/gunicorn --workers 3 --bind unix:payforge.sock -m 007 app:app
+
+[Install]
+WantedBy=multi-user.target

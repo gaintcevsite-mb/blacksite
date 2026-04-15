@@ -1,12 +1,12 @@
 /* ===================================
-   PayForge — Main JS (Redesigned)
+   PayForge — Main JS (iGaming Redesign)
    =================================== */
 
 (function () {
     'use strict';
 
     // ============ COUNTRY DATA ============
-    var TELEGRAM_BOT_URL = 'https://t.me/PayForge_Bot';
+    var TELEGRAM_BOT_URL = 'https://t.me/payforgelead_bot';
 
     var countries = [
         { name: 'Pakistan', flag: '🇵🇰', region: 'Asia' },
@@ -49,8 +49,86 @@
     var optionsContainer = document.getElementById('countryOptions');
     var partnerBtn = document.getElementById('partnerBtn');
 
+    // ============ DYNAMIC CONDITIONS ============
+    // Use inline data from conditions-data.js (works with file:// protocol)
+    var conditionsData = (typeof CONDITIONS_DATA !== 'undefined') ? CONDITIONS_DATA : {};
+
+    // Also try to fetch for web server deployments
+    if (Object.keys(conditionsData).length === 0) {
+        fetch('conditions.json')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                conditionsData = data.countries || {};
+            })
+            .catch(function(err) {
+                console.warn('conditions.json fetch failed, using inline data', err);
+            });
+    }
+
+    function renderConditions(countryFullName) {
+        var data = conditionsData[countryFullName];
+        if (!data) return;
+
+        var displayBox = document.getElementById('conditionsDisplay');
+        if (!displayBox) {
+            displayBox = document.createElement('div');
+            displayBox.id = 'conditionsDisplay';
+            var pbox = document.querySelector('.partner-box');
+            if (pbox && partnerBtn) {
+                pbox.insertBefore(displayBox, partnerBtn);
+            }
+        }
+
+        var traffic = data.trafficPercentage || 50;
+        var earnings = data.earningsValue || 'Variable';
+        var conds = data.conditions || [];
+
+        var listHtml = '<ul class="cond-list">';
+        conds.forEach(function(c) {
+            listHtml += '<li>' + c + '</li>';
+        });
+        listHtml += '</ul>';
+
+        // Calculate earnings progress
+        var eProg = 50;
+        if (earnings.indexOf('500') > -1) eProg = 95;
+        else if (earnings.indexOf('150') > -1) eProg = 80;
+        else if (earnings.indexOf('100') > -1) eProg = 70;
+        else if (earnings.indexOf('75') > -1) eProg = 60;
+        else if (earnings.indexOf('50') > -1) eProg = 45;
+        else if (earnings.indexOf('30') > -1) eProg = 30;
+        else if (earnings.indexOf('5%') > -1) eProg = 85;
+        else if (earnings.indexOf('4%') > -1) eProg = 90;
+
+        displayBox.innerHTML =
+            '<div class="cond-header"><span>' + countryFullName + '</span></div>' +
+            '<div class="cond-stats">' +
+            '  <div class="cond-stat">' +
+            '    <div class="cond-stat-label">Traffic Volume</div>' +
+            '    <div class="cond-stat-value">' + traffic + '%</div>' +
+            '    <div class="progress-bar-bg"><div class="progress-bar-fill progress-bar-fill--traffic" id="trafficFill"></div></div>' +
+            '  </div>' +
+            '  <div class="cond-stat">' +
+            '    <div class="cond-stat-label">Potential Earnings</div>' +
+            '    <div class="cond-stat-value">' + earnings + '</div>' +
+            '    <div class="progress-bar-bg"><div class="progress-bar-fill progress-bar-fill--earnings" id="earningsFill"></div></div>' +
+            '  </div>' +
+            '</div>' +
+            listHtml;
+
+        displayBox.style.display = 'block';
+
+        // Animate progress bars after a short delay
+        setTimeout(function() {
+            var tFill = document.getElementById('trafficFill');
+            var eFill = document.getElementById('earningsFill');
+            if (tFill) tFill.style.width = traffic + '%';
+            if (eFill) eFill.style.width = eProg + '%';
+        }, 100);
+    }
+
+    // ============ DROPDOWN SETUP ============
     if (selectBox && optionsContainer) {
-        // Generate options
         countries.forEach(function (c) {
             var opt = document.createElement('div');
             opt.className = 'custom-select__option';
@@ -65,6 +143,12 @@
                 partnerBtn.style.display = 'inline-flex';
                 var safeName = c.name.replace(/\s+/g, '_');
                 partnerBtn.href = TELEGRAM_BOT_URL + '?start=join_' + encodeURIComponent(safeName);
+
+                // Show conditions for this country
+                var cKey = Object.keys(conditionsData).find(function(k) {
+                    return k.indexOf(c.name) > -1;
+                });
+                if (cKey) renderConditions(cKey);
             });
 
             optionsContainer.appendChild(opt);
@@ -99,7 +183,6 @@
             var target = document.getElementById('partners');
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                // Optional: briefly highlight the selector box
                 setTimeout(function () {
                     selectBox.style.borderColor = 'var(--deep-red)';
                     setTimeout(function () {
@@ -128,6 +211,21 @@
         });
     }
 
+    
+    // ============ FLOAT CONTACT VISIBILITY ============
+    document.addEventListener('DOMContentLoaded', function() {
+        var floatContact = document.querySelector('.float-contact');
+        if (floatContact) {
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 200) {
+                    floatContact.classList.add('float-contact--visible');
+                } else {
+                    floatContact.classList.remove('float-contact--visible');
+                }
+            }, { passive: true });
+        }
+    });
+
     // ============ SCROLL REVEAL ============
     var reveals = document.querySelectorAll('.reveal');
 
@@ -155,7 +253,7 @@
         var heroBottom = heroSection ? heroSection.offsetHeight - 80 : 200;
 
         if (window.scrollY > 10) {
-            nav.style.boxShadow = '0 1px 12px rgba(43,45,51,0.06)';
+            nav.style.boxShadow = '0 1px 12px rgba(0,0,0,0.3)';
         } else {
             nav.style.boxShadow = 'none';
         }
@@ -182,7 +280,6 @@
     }
 
     // ============ GEO IP AUTO-SELECT & REDIRECT ============
-    // Only fetch if we don't have it saved, or perform actions if we do.
     async function initGeoIp() {
         let geoData = null;
         const storedGeo = sessionStorage.getItem('geo_data');
@@ -206,11 +303,10 @@
         }
 
         if (geoData && geoData.country_code) {
-            const countryCode = geoData.country_code; // e.g. "ES", "AR", "PA"
-            const countryNameStr = geoData.country; // e.g. "Panama"
+            const countryCode = geoData.country_code;
+            const countryNameStr = geoData.country;
 
             // 1. Language Auto-Redirect
-            // If user is from a Spanish-speaking country and on index.html, redirect once.
             const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.indexOf('.html') === -1;
             const redirected = sessionStorage.getItem('lang_redirected');
 
@@ -219,19 +315,16 @@
             if (isIndex && !redirected && latamESCodes.includes(countryCode)) {
                 sessionStorage.setItem('lang_redirected', 'true');
                 window.location.href = 'es.html';
-                return; // Stop execution as we are leaving the page
+                return;
             } else if (!redirected) {
-                // Mark as checked to prevent future loops if they manually switch
                 sessionStorage.setItem('lang_redirected', 'true');
             }
 
             // 2. Auto-Select "Become a Partner" dropdown
             if (selectBox && optionsContainer) {
-                // Find matching country in our array
                 const matchedCountry = countries.find(c => c.name.toLowerCase() === countryNameStr.toLowerCase());
 
                 if (matchedCountry) {
-                    // Update UI safely
                     if (selectValue) {
                         selectValue.innerHTML = '<span class="custom-select__option-flag" style="margin-right:8px;">' + matchedCountry.flag + '</span><span>' + matchedCountry.name + '</span>';
                     }
@@ -241,6 +334,14 @@
                         partnerBtn.href = TELEGRAM_BOT_URL + '?start=join_' + encodeURIComponent(safeName);
                     }
                     console.log('GeoIP Auto-selected:', matchedCountry.name);
+
+                    // Auto-show conditions for detected country
+                    var geoCKey = Object.keys(conditionsData).find(function(k) {
+                        return k.indexOf(matchedCountry.name) > -1;
+                    });
+                    if (geoCKey) {
+                        renderConditions(geoCKey);
+                    }
                 }
             }
         }

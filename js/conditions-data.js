@@ -1,0 +1,143 @@
+/* ===================================
+   PayForge — Conditions Data (inline)
+   Loaded before main.js so fetch() is not needed
+   =================================== */
+var CONDITIONS_DATA = {
+    "Pakistan 🇵🇰": {
+        "trafficPercentage": 85,
+        "earningsValue": "$300-500/week",
+        "conditions": [
+            "Must have a registered PVT LTD company",
+            "Must have an API wallet (JazzCash, Easypaisa, Meezan, Alfalah)",
+            "Android phone required",
+            "Experience in payments is a plus",
+            "Available 1–6 hours daily"
+        ]
+    },
+    "Uruguay 🇺🇾": {
+        "trafficPercentage": 60,
+        "earningsValue": "~$100/week",
+        "conditions": [
+            "Debe tener cuenta en BROU",
+            "Debe proporcionar acceso a la cuenta (usuario/contraseña)",
+            "Teléfono Android obligatorio",
+            "Pago: ~2.5% del volumen (~$100/semana)",
+            "Experiencia en el sector es deseable"
+        ]
+    },
+    "Egypt 🇪🇬": {
+        "trafficPercentage": 75,
+        "earningsValue": "~$50-70/week",
+        "conditions": [
+            "Must have at least 3 Vodafone accounts and Paymob",
+            "Must have a separate work phone (Android)",
+            "Must provide account access (login/password)",
+            "Work includes transfers and USDT exchange",
+            "Earnings: ~2.5% (~$50–70/week)",
+            "Deposit from $50 may be required"
+        ]
+    },
+    "Nepal 🇳🇵": {
+        "trafficPercentage": 50,
+        "earningsValue": "~$60/week",
+        "conditions": [
+            "Must have at least 2 Khalti/eSewa accounts",
+            "Must have or be ready to open Fonepay",
+            "Android phone required",
+            "Deposit from $50 required"
+        ]
+    },
+    "Mali 🇲🇱": {
+        "trafficPercentage": 45,
+        "earningsValue": "$30/week",
+        "conditions": [
+            "Must have Wave/Orange/Moov accounts",
+            "Must provide OTP/PIN access",
+            "Android phone required",
+            "Fixed payment: $30/week"
+        ]
+    },
+    "Jamaica 🇯🇲": {
+        "trafficPercentage": 65,
+        "earningsValue": "$50–75/week",
+        "conditions": [
+            "Must have Scotiabank + Lynk accounts (work only)",
+            "Android phone required (not ZTE)",
+            "Available daily 15–30 minutes",
+            "Payment: $50–75/week"
+        ]
+    },
+    "Costa Rica 🇨🇷": {
+        "trafficPercentage": 70,
+        "earningsValue": "$65/week",
+        "conditions": [
+            "Debe tener cuenta en BAC Credomatic con SINPE",
+            "Cuenta activa sin saldo negativo",
+            "Teléfono Android obligatorio",
+            "Instalar SMS-forwarder",
+            "Pago: $50/semana + $15 bonus"
+        ]
+    },
+    "Panama 🇵🇦": {
+        "trafficPercentage": 55,
+        "earningsValue": "~$50/week",
+        "conditions": [
+            "Debe tener cuenta en YAPPY",
+            "Teléfono Android obligatorio"
+        ]
+    },
+    "Ethiopia 🇪🇹": {
+        "trafficPercentage": 95,
+        "earningsValue": "~$100-150/week",
+        "conditions": [
+            "Must have Telebirr Level 3",
+            "Android phone required",
+            "Deposit from $150",
+            "Earnings: 2.5% (~$100–150/week)",
+            "High traffic volume"
+        ]
+    },
+    "India 🇮🇳": {
+        "trafficPercentage": 100,
+        "earningsValue": "~$500-600/week",
+        "conditions": [
+            "Must have bank accounts (multiple preferred)",
+            "Must provide account access",
+            "Android phone required",
+            "Work includes transfers and USDT exchange",
+            "Earnings: ~4% (~$500–600/week)",
+            "Deposit from $500"
+        ]
+    },
+    "Guatemala 🇬🇹": {
+        "trafficPercentage": 65,
+        "earningsValue": "~$50-70/week",
+        "conditions": [
+            "Debe tener cuentas en BAC y Banco Industrial",
+            "Debe proporcionar acceso a las cuentas",
+            "Teléfono Android obligatorio",
+            "Trabajo con transferencias y USDT",
+            "Ganancia: 2.5% (~$50–70/semana)"
+        ]
+    },
+    "Tunisia 🇹🇳": {
+        "trafficPercentage": 80,
+        "earningsValue": "Up to 5%",
+        "conditions": [
+            "Must understand platforms like 1xBet",
+            "Must have D17 account access",
+            "Android phone required",
+            "Work includes transfers and USDT exchange",
+            "Earnings: up to 5%"
+        ]
+    },
+    "El Salvador 🇸🇻": {
+        "trafficPercentage": 40,
+        "earningsValue": "~$40/week",
+        "conditions": [
+            "Debe tener T365 conectado a BAC",
+            "O estar listo para conectarlo",
+            "Teléfono Android obligatorio"
+        ]
+    }
+};

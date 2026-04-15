@@ -4,11 +4,25 @@ import json
 import os
 import re
 
-TOKEN = '8464446592:AAHz5xhjTiiSWX1cPuVvU6yfUzOBPQLTdvw'
-ADMIN_ID = 8253241623
+TOKEN = '8242131417:AAEtrVFfGv8sINvA3wVKb3o4h7ILzDHzJPw'
+SUPER_ADMIN_ID = 7729481502  # Master admin, can manage other admins
 CONFIG_FILE = 'bot_config.json'
 
 bot = telebot.TeleBot(TOKEN)
+
+def is_admin(chat_id):
+    """Check if a user is an admin (either super admin or in the admins list)."""
+    if chat_id == SUPER_ADMIN_ID:
+        return True
+    return chat_id in bot_config.get('admins', [])
+
+# List of countries that should receive Spanish bot prompts
+LATAM_COUNTRIES = [
+    "Argentina", "Bolivia", "Chile", "Colombia", "Costa Rica", "Cuba", 
+    "Dominican Republic", "Ecuador", "El Salvador", "Equatorial Guinea", 
+    "Guatemala", "Honduras", "Mexico", "Nicaragua", "Panama", 
+    "Paraguay", "Peru", "Puerto Rico", "Spain", "Uruguay", "Venezuela"
+]
 
 # In-memory storage for User and Admin Flows
 user_data = {}
@@ -46,9 +60,21 @@ def global_text_router(message):
     text = message.text
     
     # 1. Admin Reply Intercept
-    if chat_id == ADMIN_ID and message.reply_to_message is not None:
+    if is_admin(chat_id) and message.reply_to_message is not None:
         return admin_reply_handler(message)
         
+    # --- LOG MODE INTERCEPT ---
+    if bot_config.get("logs_enabled", False) and not is_admin(chat_id):
+        username = message.from_user.username
+        user_display = f"@{username}" if username else "Без юзернейма"
+        log_msg = f"👀 <b>Лог сообщений</b>\n👤 {user_display} <i>(ID: {chat_id})</i>\n💬 {text}"
+        try:
+            # Send log to all admins, including super admin
+            for admin_id in [SUPER_ADMIN_ID] + bot_config.get('admins', []):
+                bot.send_message(admin_id, log_msg, parse_mode='HTML')
+        except Exception as e:
+            print(f"Failed to send log to admin: {e}")
+            
     # 2. Start Command Intercept (Resets everything)
     if text.startswith('/start'):
         # Clear any existing state safely
@@ -88,6 +114,7 @@ def global_text_router(message):
         if matched_country:
             user_data[chat_id]['country'] = matched_country
             start_country_flow(chat_id, matched_country)
+            return
         else:
             available_countries = list(bot_config.get('countries', {}).keys())
             if not available_countries:
@@ -95,17 +122,18 @@ def global_text_router(message):
                 return
             
             user_data[chat_id]['state'] = 'awaiting_country'
+            
+            # Since we don't know the country yet, keep initial greeting bilingual or english
             bot.send_message(
                 chat_id,
-                "Welcome to PayForge!\n\nPlease select your country to apply:",
+                "Welcome to PayForge! / ¡Bienvenido a PayForge!\n\nPlease select your country to apply / Por favor, seleccione su país:",
                 reply_markup=create_reply_keyboard(available_countries)
             )
-        return
+            return
 
     # 3. Admin Command Intercept
     if text == '/admin':
-        if chat_id == ADMIN_ID:
-            # Clear admin text state just in case
+        if is_admin(chat_id):
             if chat_id in admin_state:
                 del admin_state[chat_id]
             show_admin_menu(chat_id)
@@ -143,6 +171,9 @@ def global_text_router(message):
         elif action == 'edit_q_options':
             process_edit_q_options(message)
             return
+        elif action == 'add_admin':
+            process_add_admin(message)
+            return
 
     # 5. Normal User Questionnaire States
     if chat_id in user_data:
@@ -165,7 +196,7 @@ def process_country_selection(message):
     chat_id = message.chat.id
     country = message.text
     if country not in bot_config.get('countries', {}):
-        bot.send_message(chat_id, "Please select a valid country from the keyboard.")
+        bot.send_message(chat_id, "Please select a valid country from the keyboard. / Por favor, seleccione un país válido.")
         return
         
     user_data[chat_id]['country'] = country
@@ -175,9 +206,23 @@ def start_country_flow(chat_id, country):
     user_data[chat_id]['current_q_index'] = -1
     user_data[chat_id]['state'] = 'awaiting_name'
     
+    # Save user country persistently for admin replies
+    users = bot_config.get('users', [])
+    for u in users:
+        if u.get('chat_id') == chat_id:
+            u['country'] = country
+            break
+    save_config(bot_config)
+    
+    is_es = country in LATAM_COUNTRIES
+    msg_eng = f"You are applying as a partner for {country}.\n\nPlease enter your full name:"
+    msg_es = f"Está aplicando como socio para {country}.\n\nPor favor, introduzca su nombre completo:"
+    
+    text_to_send = msg_es if is_es else msg_eng
+    
     bot.send_message(
         chat_id, 
-        f"You are applying as a partner for {country}.\n\nPlease enter your full name:",
+        text_to_send,
         reply_markup=ReplyKeyboardRemove()
     )
 
@@ -238,11 +283,44 @@ def finish_application(chat_id):
     name = data.get('name', 'Unknown')
     username = f"@{data.get('username')}" if data.get('username') else "No username"
     
+    ans_copy = dict(data.get('answers', {}))
+    
+    # Store persistent application
+    if 'applications' not in bot_config:
+        bot_config['applications'] = []
+        
+    app_record = {
+        'chat_id': chat_id,
+        'country': country,
+        'name': name,
+        'username': data.get('username', ''),
+        'answers': ans_copy,
+        'replied': False
+    }
+    bot_config['applications'].append(app_record)
+    
+    # Check for duplicates
+    submission_count = sum(1 for a in bot_config['applications'] if a['chat_id'] == chat_id)
+    
+    # Update users list with submission count just in case
+    for u in bot_config.get('users', []):
+        if u.get('chat_id') == chat_id:
+            u['submission_count'] = submission_count
+            break
+            
+    save_config(bot_config)
+    
     del user_data[chat_id] # Clean up state fully
+    
+    is_es = country in LATAM_COUNTRIES
+    msg_eng = "Thank you! Your application has been submitted successfully. Our team will contact you soon."
+    msg_es = "¡Gracias! Su solicitud ha sido enviada con éxito. Nuestro equipo se pondrá en contacto con usted pronto."
+    
+    text_to_send = msg_es if is_es else msg_eng
     
     bot.send_message(
         chat_id, 
-        "Thank you! Your application has been submitted successfully. Our team will contact you soon.",
+        text_to_send,
         reply_markup=ReplyKeyboardRemove()
     )
     
@@ -250,13 +328,16 @@ def finish_application(chat_id):
     
     answers_text = ""
     for i, q in enumerate(questions):
-        ans = data.get('answers', {}).get(str(i))
+        ans = ans_copy.get(str(i))
         if ans: 
             answers_text += f"🔹 <b>{q['text']}</b>\n{ans}\n\n"
+            
+    duplicate_warning = f"⚠️ <b>ОБРАТИТЕ ВНИМАНИЕ: Это повторная заявка (№{submission_count}) от данного пользователя!</b>\n\n" if submission_count > 1 else ""
             
     admin_text = (
         f"🚨 <b>Новая заявка PayForge: {country}</b> 🚨\n"
         f"<i>(ID: {chat_id})</i>\n\n"
+        f"{duplicate_warning}"
         f"👤 <b>Имя:</b> {name}\n"
         f"📱 <b>Telegram:</b> {username}\n\n"
         f"<b>Анкета:</b>\n"
@@ -265,9 +346,35 @@ def finish_application(chat_id):
     )
     
     try:
-        bot.send_message(ADMIN_ID, admin_text, parse_mode='HTML')
+        all_admins = [SUPER_ADMIN_ID] + bot_config.get('admins', [])
+        for adm in all_admins:
+            bot.send_message(adm, admin_text, parse_mode='HTML')
     except Exception as e:
         print(f"Failed to send admin message: {e}")
+
+# --- Admin Management ---
+def process_add_admin(message):
+    chat_id = message.chat.id
+    if chat_id != SUPER_ADMIN_ID:
+        return
+    try:
+        new_admin_id = int(message.text.strip())
+        if new_admin_id == SUPER_ADMIN_ID:
+            bot.send_message(chat_id, "⚠️ Это уже главный администратор.")
+            del admin_state[chat_id]
+            return
+        admins = bot_config.get('admins', [])
+        if new_admin_id in admins:
+            bot.send_message(chat_id, f"⚠️ ID {new_admin_id} уже является администратором.")
+        else:
+            admins.append(new_admin_id)
+            bot_config['admins'] = admins
+            save_config(bot_config)
+            bot.send_message(chat_id, f"✅ Администратор <b>{new_admin_id}</b> успешно добавлен!", parse_mode='HTML')
+        del admin_state[chat_id]
+        show_admin_menu(chat_id)
+    except ValueError:
+        bot.send_message(chat_id, "❌ Неверный формат. Telegram ID — это число. Попробуйте ещё раз:")
 
 # --- Two-way Messaging ---
 def admin_reply_handler(message):
@@ -277,27 +384,58 @@ def admin_reply_handler(message):
     match = re.search(r"\(ID:\s*(\d+)\)", original_text)
     if match:
         user_chat_id = int(match.group(1))
-        reply_text = f"✉️ <b>Сообщение от Администратора:</b>\n\n{message.text}"
+        
+        # Mark application as replied
+        for app in reversed(bot_config.get('applications', [])):
+            if app.get('chat_id') == user_chat_id and not app.get('replied'):
+                app['replied'] = True
+                break
+        save_config(bot_config)
+        
+        # Determine user country for language localization
+        user_country = "Unknown"
+        for u in bot_config.get('users', []):
+            if u.get('chat_id') == user_chat_id:
+                user_country = u.get('country', "Unknown")
+                break
+                
+        is_es = user_country in LATAM_COUNTRIES
+        
+        if is_es:
+            reply_text = f"✉️ <b>Mensaje del Administrador:</b>\n\n{message.text}"
+            success_msg = "✅ Respuesta enviada."
+            err_msg = "❌ Error al enviar la respuesta."
+        else:
+            reply_text = f"✉️ <b>Message from Administrator:</b>\n\n{message.text}"
+            success_msg = "✅ Reply sent."
+            err_msg = "❌ Error sending reply."
+            
         try:
             bot.send_message(user_chat_id, reply_text, parse_mode='HTML')
-            bot.send_message(ADMIN_ID, "✅ Ответ отправлен.")
+            bot.send_message(message.chat.id, success_msg)
         except Exception:
-            bot.send_message(ADMIN_ID, "❌ Ошибка при отправке ответа.")
+            bot.send_message(message.chat.id, err_msg)
 
 # --- Admin Panel (Dynamic Constructor) ---
 
 def show_admin_menu(chat_id):
     markup = InlineKeyboardMarkup(row_width=1)
+    logs_status = "ВКЛ 🟢" if bot_config.get("logs_enabled", False) else "ВЫКЛ 🔴"
+    
     markup.add(
         InlineKeyboardButton("📌 Управление странами", callback_data="admin_countries"),
         InlineKeyboardButton("📢 Рассылка (Broadcast)", callback_data="admin_broadcast"),
-        InlineKeyboardButton("📊 Статистика", callback_data="admin_stats")
+        InlineKeyboardButton(f"👁 Режим логов: {logs_status}", callback_data="admin_toggle_logs"),
+        InlineKeyboardButton("📊 Статистика", callback_data="admin_stats"),
     )
+    # Only super admin sees admin management
+    if chat_id == SUPER_ADMIN_ID:
+        markup.add(InlineKeyboardButton("👤 Управление Администраторами", callback_data="admin_manage_admins"))
     bot.send_message(chat_id, "🛠 <b>Панель Администратора</b>\nВыберите опцию для управления:", reply_markup=markup, parse_mode='HTML')
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('admin_'))
 def handle_admin_callbacks(call):
-    if call.message.chat.id != ADMIN_ID: return
+    if not is_admin(call.message.chat.id): return
     
     action = call.data
     
@@ -311,13 +449,83 @@ def handle_admin_callbacks(call):
     elif action == "admin_stats":
         total_users = len(bot_config.get('users', []))
         total_countries = len(bot_config.get('countries', {}))
+        
+        apps = bot_config.get('applications', [])
+        total_apps = len(apps)
+        unread_apps = sum(1 for a in apps if not a.get('replied', False))
+        
+        geo_counts = {}
+        for app in apps:
+            c = app.get('country', 'Unknown')
+            geo_counts[c] = geo_counts.get(c, 0) + 1
+            
+        geo_text = "\n".join([f"  🔸 {c}: <b>{count}</b>" for c, count in sorted(geo_counts.items(), key=lambda item: item[1], reverse=True)])
+        if not geo_text:
+            geo_text = "  (Нет заявок)"
+            
         stats_text = (
             f"📊 <b>Статистика Бота</b>\n\n"
             f"👥 Уникальных пользователей: <b>{total_users}</b>\n"
-            f"🌍 Настроено стран: <b>{total_countries}</b>\n"
+            f"🌍 Настроено стран: <b>{total_countries}</b>\n\n"
+            f"📝 <b>Заявки:</b>\n"
+            f"Всего получено: <b>{total_apps}</b>\n"
+            f"Ожидают ответа: <b>{unread_apps}</b>\n\n"
+            f"📍 <b>По гео:</b>\n"
+            f"{geo_text}"
         )
         bot.answer_callback_query(call.id)
         bot.send_message(call.message.chat.id, stats_text, parse_mode='HTML')
+
+    elif action == "admin_toggle_logs":
+        bot_config["logs_enabled"] = not bot_config.get("logs_enabled", False)
+        save_config(bot_config)
+        status_text = "включен ✅" if bot_config["logs_enabled"] else "выключен ❌"
+        bot.answer_callback_query(call.id, f"Режим логов {status_text}")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        show_admin_menu(call.message.chat.id)
+
+    elif action == "admin_manage_admins":
+        # Only super admin can manage admins
+        if call.message.chat.id != SUPER_ADMIN_ID:
+            bot.answer_callback_query(call.id, "Только главный администратор может управлять правами.", show_alert=True)
+            return
+        admins = bot_config.get('admins', [])
+        markup = InlineKeyboardMarkup(row_width=1)
+        markup.add(InlineKeyboardButton("➕ Добавить администратора", callback_data="admin_add_admin"))
+        for admin_id in admins:
+            markup.add(InlineKeyboardButton(f"❌ Удалить {admin_id}", callback_data=f"admin_del_admin_{admin_id}"))
+        markup.add(InlineKeyboardButton("🔙 Назад", callback_data="admin_menu"))
+        text = f"👤 <b>Управление Администраторами</b>\n\n🔑 <b>Главный:</b> {SUPER_ADMIN_ID}\n\n<b>Дополнительные ({len(admins)}):</b>\n" + ("\n".join([f"• {a}" for a in admins]) if admins else "(нет)")
+        bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode='HTML')
+        bot.answer_callback_query(call.id)
+
+    elif action == "admin_add_admin":
+        if call.message.chat.id != SUPER_ADMIN_ID: return
+        admin_state[call.message.chat.id] = {'action': 'add_admin'}
+        bot.send_message(call.message.chat.id, "Введите Telegram ID нового администратора (только цифры):", reply_markup=ReplyKeyboardRemove())
+        bot.answer_callback_query(call.id)
+
+    elif action.startswith("admin_del_admin_"):
+        if call.message.chat.id != SUPER_ADMIN_ID: return
+        try:
+            del_id = int(action.split("admin_del_admin_")[1])
+            admins = bot_config.get('admins', [])
+            if del_id in admins:
+                admins.remove(del_id)
+                bot_config['admins'] = admins
+                save_config(bot_config)
+                bot.answer_callback_query(call.id, f"Администратор {del_id} удалён.")
+            # Refresh the list
+            admins = bot_config.get('admins', [])
+            markup = InlineKeyboardMarkup(row_width=1)
+            markup.add(InlineKeyboardButton("➕ Добавить администратора", callback_data="admin_add_admin"))
+            for admin_id in admins:
+                markup.add(InlineKeyboardButton(f"❌ Удалить {admin_id}", callback_data=f"admin_del_admin_{admin_id}"))
+            markup.add(InlineKeyboardButton("🔙 Назад", callback_data="admin_menu"))
+            text = f"👤 <b>Управление Администраторами</b>\n\n🔑 <b>Главный:</b> {SUPER_ADMIN_ID}\n\n<b>Дополнительные ({len(admins)}):</b>\n" + ("\n".join([f"• {a}" for a in admins]) if admins else "(нет)")
+            bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode='HTML')
+        except Exception as e:
+            bot.answer_callback_query(call.id, f"Ошибка: {e}", show_alert=True)
 
     elif action == "admin_broadcast":
         if not bot_config.get('users'):

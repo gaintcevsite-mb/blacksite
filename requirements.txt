@@ -1,0 +1,6 @@
+flask
+flask-cors
+pyTelegramBotAPI
+gunicorn
+werkzeug
+sqlite3
